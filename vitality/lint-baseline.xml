@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.10.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.10.0)" variant="all" version="8.10.0">
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 34 (current min is 26): `readLabResults`"
+        errorLine1="                medicalConnector.readLabResults(startTime, endTime)"
+        errorLine2="                                 ~~~~~~~~~~~~~~">
+        <location
+            file="src/androidMain/kotlin/HealthConnectConnector.kt"
+            line="3157"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.library than 8.10.0 is available: 8.11.0. (There is also a newer version of 8.10.𝑥 available, if upgrading to 8.11.0 is difficult: 8.10.1)"
+        errorLine1="agp = &quot;8.10.0&quot;"
+        errorLine2="      ~~~~~~~~">
+        <location
+            file="$HOME/Projects/oss/vitality/gradle/libs.versions.toml"
+            line="2"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 26"
+        errorLine1="                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/androidMain/kotlin/HealthConnectBackgroundService.kt"
+            line="92"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 26"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/androidMain/kotlin/HealthConnectBackgroundService.kt"
+            line="154"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 26"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/androidMain/kotlin/HealthConnectBackgroundService.kt"
+            line="329"
+            column="17"/>
+    </issue>
+
+</issues>
