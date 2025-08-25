@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CADisableMinimumFrameDurationOnPhone</key>
+        <true/>
+        
+        <!-- HealthKit Usage Descriptions -->
+        <key>NSHealthShareUsageDescription</key>
+        <string>This app needs access to your health data to display your fitness metrics, heart rate, and other health information.</string>
+        
+        <key>NSHealthUpdateUsageDescription</key>
+        <string>This app needs permission to write health data for demonstration purposes and to track your workouts.</string>
+        
+        <key>NSHealthClinicalHealthRecordsShareUsageDescription</key>
+        <string>This app can display your clinical health records if you grant permission. This is optional and used only for demonstration.</string>
+        
+        <!-- Required for iOS 13+ -->
+        <key>UIRequiredDeviceCapabilities</key>
+        <array>
+            <string>healthkit</string>
+        </array>
+        
+        <!-- Background modes for health data updates -->
+        <key>UIBackgroundModes</key>
+        <array>
+            <string>fetch</string>
+            <string>processing</string>
+        </array>
+    </dict>
+</plist>

@@ -40,6 +40,7 @@ class HealthKitConnector : HealthConnector {
     private val workoutSessions = mutableMapOf<String, HealthKitWorkoutSession>()
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     
+    
     override suspend fun initialize(): Result<Unit> = suspendCoroutine { continuation ->
         if (!HKHealthStore.isHealthDataAvailable()) {
             continuation.resume(Result.failure(
@@ -157,11 +158,41 @@ class HealthKitConnector : HealthConnector {
         val writeTypes = mutableSetOf<HKSampleType>()
         
         permissions.forEach { permission ->
+            // Handle blood pressure specially - request permissions for systolic and diastolic
+            if (permission.dataType == HealthDataType.BloodPressure) {
+                val systolic = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBloodPressureSystolic)
+                val diastolic = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBloodPressureDiastolic)
+                
+                if (systolic != null && diastolic != null) {
+                    when (permission.accessType) {
+                        HealthPermission.AccessType.READ -> {
+                            readTypes.add(systolic)
+                            readTypes.add(diastolic)
+                        }
+                        HealthPermission.AccessType.WRITE -> {
+                            writeTypes.add(systolic)
+                            writeTypes.add(diastolic)
+                        }
+                    }
+                }
+                return@forEach
+            }
+            
             val hkType = permission.dataType.toHKSampleType() ?: return@forEach
             
             when (permission.accessType) {
-                HealthPermission.AccessType.READ -> readTypes.add(hkType)
-                HealthPermission.AccessType.WRITE -> writeTypes.add(hkType)
+                HealthPermission.AccessType.READ -> {
+                    // Only add types that can be read
+                    if (HealthDataTypeCapabilityProvider.canRead(permission.dataType)) {
+                        readTypes.add(hkType)
+                    }
+                }
+                HealthPermission.AccessType.WRITE -> {
+                    // Filter out read-only types for write permissions
+                    if (HealthDataTypeCapabilityProvider.canWrite(permission.dataType)) {
+                        writeTypes.add(hkType)
+                    }
+                }
             }
         }
         
@@ -194,6 +225,23 @@ class HealthKitConnector : HealthConnector {
         var hasAskedForAll = true
         
         permissions.forEach { permission ->
+            // Handle blood pressure specially - check both systolic and diastolic
+            if (permission.dataType == HealthDataType.BloodPressure) {
+                val systolic = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBloodPressureSystolic)
+                val diastolic = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBloodPressureDiastolic)
+                
+                if (systolic != null && diastolic != null) {
+                    val systolicStatus = healthStore.authorizationStatusForType(systolic)
+                    val diastolicStatus = healthStore.authorizationStatusForType(diastolic)
+                    
+                    if (systolicStatus == HKAuthorizationStatusNotDetermined || 
+                        diastolicStatus == HKAuthorizationStatusNotDetermined) {
+                        hasAskedForAll = false
+                    }
+                }
+                return@forEach
+            }
+            
             val hkType = permission.dataType.toHKSampleType() ?: return@forEach
             
             val authStatus = when (permission.accessType) {

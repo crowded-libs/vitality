@@ -50,8 +50,17 @@ class HealthConnectConnector(
     private lateinit var healthConnectClient: HealthConnectClient
     private val workoutSessions = mutableMapOf<String, HealthConnectWorkoutSession>()
     private var medicalRecordsConnector: HealthConnectMedicalRecords? = null
-    private lateinit var permissionLauncher: ActivityResultLauncher<Set<String>>
     private var permissionCallback: ((Set<String>) -> Unit)? = null
+    
+    // Register for activity results immediately in the constructor
+    // This must happen before the Activity's onCreate() completes
+    private val permissionLauncher: ActivityResultLauncher<Set<String>> = 
+        activity.registerForActivityResult(
+            androidx.health.connect.client.PermissionController.createRequestPermissionResultContract()
+        ) { grantedPermissions ->
+            permissionCallback?.invoke(grantedPermissions)
+            permissionCallback = null
+        }
 
     private fun createMetadata(): Metadata {
         return Metadata.manualEntry()
@@ -78,15 +87,6 @@ class HealthConnectConnector(
             }
 
             healthConnectClient = HealthConnectClient.getOrCreate(context)
-            
-            // Initialize permission launcher after healthConnectClient is created
-            val requestPermissionActivityContract = androidx.health.connect.client.PermissionController
-                .createRequestPermissionResultContract()
-            
-            permissionLauncher = activity.registerForActivityResult(requestPermissionActivityContract) { grantedPermissions ->
-                permissionCallback?.invoke(grantedPermissions)
-                permissionCallback = null
-            }
 
             // Initialize medical records connector if supported
             if (Build.VERSION.SDK_INT >= 35) {
@@ -2203,7 +2203,15 @@ class HealthConnectConnector(
         return try {
             // Use timestamp as fallback for start/end times if not provided
             val startInstant = data.startTime?.toJavaInstant() ?: data.timestamp.toJavaInstant()
-            val endInstant = data.endTime?.toJavaInstant() ?: startInstant
+            val endInstant = data.endTime?.toJavaInstant() ?: data.timestamp.toJavaInstant()
+            
+            // Validate that end time is after start time for Health Connect
+            if (!endInstant.isAfter(startInstant)) {
+                return Result.failure(
+                    IllegalArgumentException("End time must be after start time for interval-based records. Provide proper startTime and endTime in StepsData.")
+                )
+            }
+            
             val record = StepsRecord(
                 startTime = startInstant,
                 endTime = endInstant,
@@ -2229,10 +2237,20 @@ class HealthConnectConnector(
 
             // Write active calories if available
             if (data.activeCalories > 0) {
+                val startInstant = data.startTime?.toJavaInstant() ?: instant
+                val endInstant = data.endTime?.toJavaInstant() ?: instant
+                
+                // Validate time range for interval records
+                if (!endInstant.isAfter(startInstant)) {
+                    return Result.failure(
+                        IllegalArgumentException("End time must be after start time for calorie records. Provide proper startTime and endTime in CalorieData.")
+                    )
+                }
+                
                 records.add(
                     ActiveCaloriesBurnedRecord(
-                        startTime = instant,
-                        endTime = instant,
+                        startTime = startInstant,
+                        endTime = endInstant,
                         startZoneOffset = zoneOffset,
                         endZoneOffset = zoneOffset,
                         energy = androidx.health.connect.client.units.Energy.kilocalories(data.activeCalories),
@@ -2245,10 +2263,20 @@ class HealthConnectConnector(
             // Calculate total if both active and basal are available
             if (data.activeCalories > 0 && data.basalCalories != null && data.basalCalories > 0) {
                 val total = data.activeCalories + data.basalCalories
+                val startInstant = data.startTime?.toJavaInstant() ?: instant
+                val endInstant = data.endTime?.toJavaInstant() ?: instant
+                
+                // Validate time range for interval records
+                if (!endInstant.isAfter(startInstant)) {
+                    return Result.failure(
+                        IllegalArgumentException("End time must be after start time for calorie records. Provide proper startTime and endTime in CalorieData.")
+                    )
+                }
+                
                 records.add(
                     TotalCaloriesBurnedRecord(
-                        startTime = instant,
-                        endTime = instant,
+                        startTime = startInstant,
+                        endTime = endInstant,
                         startZoneOffset = zoneOffset,
                         endZoneOffset = zoneOffset,
                         energy = androidx.health.connect.client.units.Energy.kilocalories(total),

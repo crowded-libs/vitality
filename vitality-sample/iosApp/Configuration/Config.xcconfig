@@ -1,0 +1,7 @@
+TEAM_ID=
+
+PRODUCT_NAME=vitality_sample
+PRODUCT_BUNDLE_IDENTIFIER=io.github.crowdedlibs.vitality_sample
+
+CURRENT_PROJECT_VERSION=1
+MARKETING_VERSION=1.0

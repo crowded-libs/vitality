@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "vitality"
 include(":vitality")
+include(":vitality-sample:composeApp")
