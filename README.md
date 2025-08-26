@@ -1,5 +1,9 @@
 # Vitality
 
+[![Build](https://github.com/crowded-libs/vitality/actions/workflows/build.yml/badge.svg)](https://github.com/crowded-libs/vitality/actions/workflows/build.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/io.crowded-libs/vitality.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.crowded-libs%22)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+
 A Kotlin Multiplatform library providing unified health data access across Apple HealthKit (iOS) and Health Connect (Android). Vitality offers comprehensive health metrics, **real-time** monitoring via Kotlin flows, workout management, and medical records support through FHIR standards.
 
 ## Features
@@ -18,7 +22,7 @@ A Kotlin Multiplatform library providing unified health data access across Apple
 
 ```kotlin
 dependencies {
-    implementation("io.crowded-innovations:vitality:0.1.0")
+    implementation("io.crowded-libs:vitality:0.1.0")
 }
 ```
 
