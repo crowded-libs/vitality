@@ -14,9 +14,9 @@ import platform.Foundation.*
 import platform.HealthKit.*
 import vitality.exceptions.*
 import vitality.extensions.*
-import vitality.healthkit.ClinicalRecordReader
-import vitality.healthkit.ECGReader
-import vitality.healthkit.HealthKitMetadataExtractor
+import HealthKitBindings.ClinicalRecordReader
+import HealthKitBindings.ECGReader
+import HealthKitBindings.HealthKitMetadataExtractor
 import vitality.helpers.observeCategoryType
 import vitality.models.*
 import vitality.models.fhir.*

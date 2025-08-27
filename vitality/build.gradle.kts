@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.dokka)
     alias(libs.plugins.vanniktech.mavenPublish)
-    alias(libs.plugins.swiftKlib)
+    alias(libs.plugins.spm)
 }
 
 group = "io.github.crowded-libs"
@@ -119,9 +119,8 @@ mavenPublishing {
     }
 }
 
-swiftklib {
+swiftPackageConfig {
     create("HealthKitBindings") {
-        path = file("src/iosMain/swift")
-        packageName("vitality.healthkit")
+        minIos = "13.0"
     }
 }

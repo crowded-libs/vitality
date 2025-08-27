@@ -9,7 +9,7 @@ android-targetSdk = "36"
 kotlinx-datetime = "0.7.1"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
-swiftklib = "0.6.4"
+spm = "0.11.3"
 composeMultiplatform = "1.8.2"
 androidx-activity = "1.10.1"
 androidx-lifecycle = "2.9.2"
@@ -30,6 +30,6 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
-swiftKlib = { id = "io.github.ttypic.swiftklib", version.ref = "swiftklib" }
+spm = { id = "io.github.frankois944.spmForKmp", version.ref = "spm" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

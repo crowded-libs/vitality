@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build
 
 on:
   push:
@@ -23,7 +23,7 @@ on:
 jobs:
   # Check if we should run the workflow based on changes
   changes:
-    runs-on: macos-latest
+    runs-on: macos-14
     outputs:
       should_run: ${{ steps.filter.outputs.src_changed }}
     steps:
@@ -41,7 +41,7 @@ jobs:
               - '.github/workflows/**'
   
   build:
-    name: Build and Test on ${{ matrix.os }}
+    name: Build on ${{ matrix.os }}
     needs: changes
     if: ${{ needs.changes.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
     runs-on: ${{ matrix.os }}
@@ -53,6 +53,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.2'
 
       - name: Setup JDK
         uses: actions/setup-java@v4

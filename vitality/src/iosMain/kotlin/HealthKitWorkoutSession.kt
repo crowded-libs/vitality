@@ -1,7 +1,7 @@
 package vitality
 
 import vitality.models.*
-import vitality.healthkit.*
+import HealthKitBindings.*
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

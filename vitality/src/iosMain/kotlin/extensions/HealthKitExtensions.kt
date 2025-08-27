@@ -2,7 +2,7 @@ package vitality.extensions
 
 import vitality.*
 import vitality.models.*
-import vitality.healthkit.*
+import HealthKitBindings.*
 import platform.HealthKit.*
 import platform.Foundation.*
 import platform.UIKit.UIDevice
