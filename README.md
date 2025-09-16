@@ -22,7 +22,7 @@ A Kotlin Multiplatform library providing unified health data access across Apple
 
 ```kotlin
 dependencies {
-    implementation("io.crowded-libs:vitality:0.1.0")
+    implementation("io.crowded-libs:vitality:0.1.1")
 }
 ```
 
